@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import './App.css';
 import Game from './components/Game'
 import Hanged from './components/Hanged'
 
 
-// const words = ["player", "deloitte", "consulting", "lockdown", "smartworking"];
-// HOME PAGE IS -  https://random-word-api.herokuapp.com/home
+const words = ["player", "deloitte", "consulting", "lockdown", "smartworking"];
 const baseUrl = "https://random-word-api.herokuapp.com//word?number=1";
 
 const App = () => {
@@ -16,7 +15,6 @@ const App = () => {
   const [shownLetters, setShownLetters] = useState([]);
   const [missedLetters, setMissedLetters] = useState([]);
   const [gameStatus, setGameStatus] = useState('playable');
-  const [spinner, setSpinner] = useState(false);
 
   console.log(word);
   console.log('missed letters',missedLetters);
@@ -48,11 +46,9 @@ const App = () => {
       //let index = Math.floor(Math.random() * num);
       //setWord(words[index]);
       //twoRandomLetters(words[index]);
-      setSpinner(true);
       let result = await axios.get(baseUrl);
       result = await result.data[0];
       setWord(result);
-      setSpinner(false);
 
       twoRandomLetters(result);
       setGameStarted(!gameStarted);
@@ -60,8 +56,6 @@ const App = () => {
       setGameStarted(!gameStarted);
       setWord(null);
       setShownLetters([]);
-      setMissedLetters([]);
-      setGameStatus('playable');
     }
   }
 
@@ -90,7 +84,7 @@ const App = () => {
   if (gameStatus === 'playable') {
     return (
       <div className="App">
-        <Game  click={handleStart} word={word} gameStarted={gameStarted} shownLetters={shownLetters} setShownLetters={setShownLetters} setMissedLetters={setMissedLetters} missedLetters={missedLetters} setGameStatus={setGameStatus} gameStatus={gameStatus} spinner={spinner} />
+        <Game  click={handleStart} word={word} gameStarted={gameStarted} shownLetters={shownLetters} setShownLetters={setShownLetters} setMissedLetters={setMissedLetters} missedLetters={missedLetters} setGameStatus={setGameStatus} gameStatus={gameStatus} />
       </div>
   );
   } else if (gameStatus === 'lost') {
@@ -98,8 +92,7 @@ const App = () => {
         <div className="App">
             <h1>Hangman Game</h1>
             <button onClick={() => handleRestart()}>Restart</button>
-            <h3>Unfortunately you have lost..</h3>
-            <p>the missing word was <strong>{word}</strong></p>
+            <h3>Lost..</h3>
             <p>{missedLetters.length} missed attempts</p>
             <Hanged missedLetters={missedLetters} />
         </div>
@@ -109,7 +102,7 @@ const App = () => {
         <div className="App">
             <h1>Hangman Game</h1>
             <button onClick={() => handleRestart()}>Restart</button>
-            <h3>Congratulation!! You have found the hidden word!!</h3>
+            <h3>Win!!</h3>
             <p>{missedLetters.length} missed attempts</p>
         </div>
       )
