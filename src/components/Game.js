@@ -26,7 +26,7 @@ const Game = ({ click, gameStarted, shownLetters, setShownLetters, word, setMiss
             setGameStatus('lost');
         }
         let remainingLetters = sl.filter(el => el.foundLetter === null);
-        console.log('remaining letters',remainingLetters)
+        //console.log('remaining letters',remainingLetters)
         if (remainingLetters.length === 0) {
             setGameStatus('won');
         }
@@ -47,6 +47,8 @@ const Game = ({ click, gameStarted, shownLetters, setShownLetters, word, setMiss
         if (il === '') {
             return
         }
+        //console.log('shownletters', shownLetters)
+        //pernaei to input sto sl ,sta foundLetter an exei vrethei swsto gramma, an de brethike tote paramenei idio me to shownletters  
         let sl = shownLetters.map(el => {
             if (el.realLetter === il) {
                 return { realLetter : el.realLetter, foundLetter: il }
@@ -54,9 +56,14 @@ const Game = ({ click, gameStarted, shownLetters, setShownLetters, word, setMiss
                 return { realLetter : el.realLetter, foundLetter: el.foundLetter }
             }
         });
-        checkGameStatus(missedLetters.concat(il), sl);
+        //console.log('sl', sl)
+        //AN einai idia to shownLetters me to sl, tote to input den yparxei opote tsekarei an ta missedLetters mazi (concat) me to input einai 6 k pernaei t input sta missedLetter, an einai 6 exase
+        //An den einai idia , to input uparxei ara chekarei ta sl an einai ola ta foundLetters NON null, an einai ola NON null kerdise
         if (arraysEqual(sl,shownLetters)) {
+            checkGameStatus(missedLetters.concat(il), sl);
             setMissedLetters(missedLetters.concat(il));
+        } else {
+            checkGameStatus(missedLetters, sl);
         }
         setShownLetters(sl);
         setInputLetters('');
